@@ -3,11 +3,15 @@ package com.example.helpdesk.controllers;
 
 import com.example.helpdesk.models.Usuario;
 import com.example.helpdesk.services.UsuarioService;
+import com.example.helpdesk.services.impl.ExportPDFService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,7 +20,8 @@ import java.util.Optional;
 public class UsuarioController {
      @Autowired
     private UsuarioService usuarioService;
-
+    @Autowired
+     private ExportPDFService exportPDFService;
      @GetMapping
       public ResponseEntity<?> obtUsuarios(){
          return ResponseEntity.ok().body(usuarioService.findAll());
@@ -58,4 +63,11 @@ public class UsuarioController {
          return ResponseEntity.noContent().build();
 
      }
+
+     /*@GetMapping("/export/pdf")
+    public ResponseEntity<InputStreamResource> exportPdf()     {
+         List<Usuario> usuarios = usuarioService.findAll();
+         ByteArrayInputStream bytes= exportPDFService.usuariosPDFReport(usuarios);
+         re
+     }*/
 }

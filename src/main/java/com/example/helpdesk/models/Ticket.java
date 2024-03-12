@@ -25,7 +25,6 @@ public class Ticket {
     private String prioridad;
     @Column(name="idUsuario")
     private Long creadoPor;
-
     @Column(name="fechaReg")
     private Date fechaRegistro;
     @Column(name="fechaInicio")

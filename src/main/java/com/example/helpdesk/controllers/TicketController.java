@@ -8,14 +8,24 @@ import com.example.helpdesk.models.Usuario;
 import com.example.helpdesk.services.EquipoService;
 import com.example.helpdesk.services.TicketService;
 import com.example.helpdesk.services.UsuarioService;
+import com.example.helpdesk.services.impl.ExportPDFService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.helpdesk.services.impl.ExportPDFService.fechaFormatotabla;
 
 @RestController
 @CrossOrigin
@@ -27,6 +37,8 @@ public class TicketController {
     private EquipoService equipoService;
   @Autowired
    private UsuarioService usuarioService;
+  @Autowired
+  private ExportPDFService exportPDFService;
  /* @GetMapping
   public ResponseEntity<?> listar(){
     return ResponseEntity.ok().body(ticketService.findAll());
@@ -39,8 +51,8 @@ public class TicketController {
     }
     return ResponseEntity.ok(o.get());
   }
-  @GetMapping
-  public ResponseEntity<?> listar(){
+  @GetMapping()
+  public List<TicketBean> listar(){
     List <TicketBean> vResponse = new ArrayList<>();
     TicketBean vTicketAux =   new TicketBean();
     List<Ticket> vTickeReg =  ticketService.findAll();
@@ -66,7 +78,7 @@ public class TicketController {
 
       vResponse.add(vTicketAux);
     }
-    return ResponseEntity.ok().body(vResponse);
+    return vResponse;
   }
   @PostMapping
   public ResponseEntity<?> crear(@RequestBody Ticket ticket){
@@ -102,5 +114,18 @@ public class TicketController {
 
   }
 
+    @GetMapping(value = "/exportpdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> ticketReports(HttpServletResponse response) throws IOException {
 
+        List<TicketBean> tickets = listar();
+
+
+        ByteArrayInputStream bis =  exportPDFService.ticketReport(tickets);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add("Content-Disposition", "attachment;filename=employees.pdf");
+
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(new InputStreamResource(bis));
+    }
 }
