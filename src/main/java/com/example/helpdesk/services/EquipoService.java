@@ -14,4 +14,5 @@ public interface EquipoService {
 
     public Equipo save(Equipo equipo);
     public void deleteById(Long id);
+    public Optional<Equipo> findBYActivoFijo(String activoFijo);
 }

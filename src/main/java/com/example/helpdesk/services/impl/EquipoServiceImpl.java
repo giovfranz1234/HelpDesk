@@ -35,4 +35,11 @@ public class EquipoServiceImpl implements EquipoService {
     public void deleteById(Long id) {
         equipoRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<Equipo>findBYActivoFijo(String activoFijo) {
+        return equipoRepository.findBySerieActivoFijo(activoFijo);
+    }
+
+
 }

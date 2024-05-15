@@ -57,5 +57,15 @@ import java.util.Optional;
             return ResponseEntity.noContent().build();
 
         }
+        @GetMapping("actFijo/{activoFijo}")
+        public ResponseEntity<?> ObtEquipoByActFijo(@PathVariable String activoFijo){
+            Optional<Equipo> o = equipoService.findBYActivoFijo(activoFijo);
+            if (o.isEmpty()){
+                return  ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(o.get());
+        }
+
+
     }
 
