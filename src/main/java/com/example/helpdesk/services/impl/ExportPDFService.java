@@ -169,26 +169,47 @@ public class ExportPDFService {
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(cell);
 
+                if (ticket.getAsignadoa()!=null|| !ticket.getAsignadoa().equals("") ){
                 cell = new PdfPCell(new Phrase(ticket.getAsignadoa()));
                 cell.setPaddingLeft(5);
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(cell);
+                }else{
+                    String asignadoa = "--";
+                cell = new PdfPCell(new Phrase(asignadoa));
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setPaddingRight(5);
+                table.addCell(cell);
+                }
+
                 cell = new PdfPCell(new Phrase(ticket.getPrioridad()));
                 cell.setPaddingLeft(5);
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(cell);
+
                 cell = new PdfPCell(new Phrase(fechaFormatotabla(ticket.getFechaRegistro())));
                 cell.setPaddingLeft(5);
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(cell);
+
+                if(ticket.getFechaInicio()==null){
+                    String fecha = "--";
+                    cell = new PdfPCell(new Phrase(fecha));
+                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    cell.setPaddingRight(5);
+                    table.addCell(cell);
+                }else{
                 cell = new PdfPCell(new Phrase(fechaFormatotabla(ticket.getFechaInicio())));
                 cell.setPaddingLeft(5);
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(cell);
+                }
                 if(ticket.getFechaFin()==null){
                    String fecha = "--";
                   cell = new PdfPCell(new Phrase(fecha));

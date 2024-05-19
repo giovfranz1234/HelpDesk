@@ -54,10 +54,11 @@ public class TicketController {
   @GetMapping()
   public List<TicketBean> listar(){
     List <TicketBean> vResponse = new ArrayList<>();
-    TicketBean vTicketAux =   new TicketBean();
+
     List<Ticket> vTickeReg =  ticketService.findAll();
     int i=0;
     for (Ticket tickets:vTickeReg){
+      TicketBean vTicketAux =   new TicketBean();
       vTicketAux.setId(tickets.getId());
       vTicketAux.setDescripcion(tickets.getDescripcion());
 
@@ -65,16 +66,32 @@ public class TicketController {
         Optional<Equipo> vEquipo = equipoService.findById(tickets.getDispositivo());
         vTicketAux.setDispositivo(vEquipo.get().getTipoEquipo()+" ("+vEquipo.get().getSerieActivoFijo()+")");
       }
-      Optional<Usuario> vUsuario = usuarioService.findById(tickets.getAsignadoa());
-      vTicketAux.setCreadoPor(vUsuario.get().getNombres()+" "+vUsuario.get().getPaterno());
-      if (tickets.getAsignadoa()!= null){
-        vTicketAux.setAsignadoa(vUsuario.get().getNombres()+" "+vUsuario.get().getPaterno());
+
+
+      if (tickets.getAsignadoa()!= null || tickets.getAsignadoa().equals("0")){
+          Optional<Usuario> vUsuario = usuarioService.findById(tickets.getAsignadoa());
+          if(!vUsuario.isEmpty()){
+              vTicketAux.setAsignadoa(vUsuario.get().getNombres()+" "+vUsuario.get().getPaterno());
+          }else{
+              vTicketAux.setAsignadoa("");
+          }
+
+      }else{
+        vTicketAux.setAsignadoa("");
       }
+
       vTicketAux.setPrioridad(tickets.getPrioridad());
       vTicketAux.setFechaRegistro(tickets.getFechaRegistro());
       vTicketAux.setFechaInicio(tickets.getFechaInicio());
       vTicketAux.setFechaFin(tickets.getFechaFin());
-      vTicketAux.setEstado(tickets.getEstado());
+      if(tickets.getEstado().equals("NA")){
+        tickets.setEstado("NO ASIGNADO");
+      } else if (tickets.getEstado().equals("AC")) {
+          tickets.setEstado("ASIGNADO");
+      } else if (tickets.getEstado().equals("TE")){
+          tickets.setEstado("TERMINADO");
+      }
+        vTicketAux.setEstado(tickets.getEstado());
 
       vResponse.add(vTicketAux);
     }
