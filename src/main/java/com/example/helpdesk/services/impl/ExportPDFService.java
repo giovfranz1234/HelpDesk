@@ -147,7 +147,7 @@ public class ExportPDFService {
 
                 PdfPCell cell;
 
-                cell = new PdfPCell(new Phrase(ticket.getId()));
+                cell = new PdfPCell(new Phrase(ticket.getId().toString()));
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(cell);

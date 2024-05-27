@@ -1,6 +1,8 @@
 package com.example.helpdesk.controllers;
 
 
+import com.example.helpdesk.controllers.beans.GraficoCBean;
+import com.example.helpdesk.controllers.beans.GraficosBean;
 import com.example.helpdesk.controllers.beans.TicketBean;
 import com.example.helpdesk.models.Equipo;
 import com.example.helpdesk.models.Ticket;
@@ -79,6 +81,13 @@ public class TicketController {
       }else{
         vTicketAux.setAsignadoa("");
       }
+        Optional<Usuario> vUsuario = usuarioService.findById(tickets.getCreadoPor());
+        if(!vUsuario.isEmpty()){
+            vTicketAux.setCreadoPor(vUsuario.get().getNombres()+" "+vUsuario.get().getPaterno());
+        }else{
+            vTicketAux.setCreadoPor("");
+        }
+
 
       vTicketAux.setPrioridad(tickets.getPrioridad());
       vTicketAux.setFechaRegistro(tickets.getFechaRegistro());
@@ -97,6 +106,23 @@ public class TicketController {
     }
     return vResponse;
   }
+
+    @GetMapping("Grafico")
+    public List<GraficoCBean> datosGrafico(){
+        List <GraficosBean> vDatosAux = new ArrayList<>();
+        List <GraficoCBean> vResponse= new ArrayList<GraficoCBean>();
+
+        vDatosAux =ticketService.GraficoAsig();
+        for (GraficosBean dato:vDatosAux){
+            GraficoCBean vDatoAux= new GraficoCBean();
+            Optional<Usuario> vUsuario = usuarioService.findById(dato.getAsignadoa());
+               vDatoAux.setTecnico(vUsuario.get().getNombres() +" "+ vUsuario.get().getPaterno()+" "+vUsuario.get().getMaterno());
+               vDatoAux.setCount(dato.getCount());
+               vResponse.add(vDatoAux);
+        }
+        return vResponse;
+
+    }
   @PostMapping
   public ResponseEntity<?> crear(@RequestBody Ticket ticket){
     return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.save(ticket));

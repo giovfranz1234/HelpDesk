@@ -1,6 +1,7 @@
 package com.example.helpdesk.services.impl;
 
 
+import com.example.helpdesk.controllers.beans.GraficosBean;
 import com.example.helpdesk.models.Ticket;
 import com.example.helpdesk.repositories.ticketRepository;
 import com.example.helpdesk.services.TicketService;
@@ -38,8 +39,10 @@ public class TicketServiceImpl implements TicketService {
         ticketRepository.deleteById(id);
     }
 
-
-
+    @Override
+    public List<GraficosBean> GraficoAsig(){
+        return ticketRepository.countAsig();
+    }
 
 }
 

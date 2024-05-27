@@ -1,6 +1,7 @@
 package com.example.helpdesk.services;
 
 
+import com.example.helpdesk.controllers.beans.GraficosBean;
 import com.example.helpdesk.models.Ticket;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface TicketService {
     public Ticket save(Ticket ticket);
     public void deleteById(Long id);
 
+    public List<GraficosBean>  GraficoAsig();
 }
