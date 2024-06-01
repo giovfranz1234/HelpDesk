@@ -106,7 +106,7 @@ public class TicketController {
     }
     return vResponse;
   }
-    @GetMapping()
+    @GetMapping("/asigna")
     public List<TicketBean> obtAsignar(){
         List <TicketBean> vResponse = new ArrayList<>();
 
@@ -161,7 +161,7 @@ public class TicketController {
         }
         return vResponse;
     }
-    @GetMapping()
+    @GetMapping("/cierre")
     public List<TicketBean> obtCerrar(){
         List <TicketBean> vResponse = new ArrayList<>();
 
