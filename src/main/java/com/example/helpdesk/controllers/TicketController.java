@@ -106,6 +106,116 @@ public class TicketController {
     }
     return vResponse;
   }
+    @GetMapping()
+    public List<TicketBean> obtAsignar(){
+        List <TicketBean> vResponse = new ArrayList<>();
+
+        List<Ticket> vTickeReg =  ticketService.findAll();
+        int i=0;
+        for (Ticket tickets:vTickeReg){
+          if (tickets.getEstado() =="NA" || tickets.getEstado() =="AC" ) {
+              TicketBean vTicketAux = new TicketBean();
+              vTicketAux.setId(tickets.getId());
+              vTicketAux.setDescripcion(tickets.getDescripcion());
+
+              if (tickets.getDispositivo() != null) {
+                  Optional<Equipo> vEquipo = equipoService.findById(tickets.getDispositivo());
+                  vTicketAux.setDispositivo(vEquipo.get().getTipoEquipo() + " (" + vEquipo.get().getSerieActivoFijo() + ")");
+              }
+
+
+              if (tickets.getAsignadoa() != null || tickets.getAsignadoa().equals("0")) {
+                  Optional<Usuario> vUsuario = usuarioService.findById(tickets.getAsignadoa());
+                  if (!vUsuario.isEmpty()) {
+                      vTicketAux.setAsignadoa(vUsuario.get().getNombres() + " " + vUsuario.get().getPaterno());
+                  } else {
+                      vTicketAux.setAsignadoa("");
+                  }
+
+              } else {
+                  vTicketAux.setAsignadoa("");
+              }
+              Optional<Usuario> vUsuario = usuarioService.findById(tickets.getCreadoPor());
+              if (!vUsuario.isEmpty()) {
+                  vTicketAux.setCreadoPor(vUsuario.get().getNombres() + " " + vUsuario.get().getPaterno());
+              } else {
+                  vTicketAux.setCreadoPor("");
+              }
+
+
+              vTicketAux.setPrioridad(tickets.getPrioridad());
+              vTicketAux.setFechaRegistro(tickets.getFechaRegistro());
+              vTicketAux.setFechaInicio(tickets.getFechaInicio());
+              vTicketAux.setFechaFin(tickets.getFechaFin());
+              if (tickets.getEstado().equals("NA")) {
+                  tickets.setEstado("NO ASIGNADO");
+              } else if (tickets.getEstado().equals("AC")) {
+                  tickets.setEstado("ASIGNADO");
+              } else if (tickets.getEstado().equals("TE")) {
+                  tickets.setEstado("TERMINADO");
+              }
+              vTicketAux.setEstado(tickets.getEstado());
+
+              vResponse.add(vTicketAux);
+          }
+        }
+        return vResponse;
+    }
+    @GetMapping()
+    public List<TicketBean> obtCerrar(){
+        List <TicketBean> vResponse = new ArrayList<>();
+
+        List<Ticket> vTickeReg =  ticketService.findAll();
+        int i=0;
+        for (Ticket tickets:vTickeReg){
+            if ( tickets.getEstado() =="AC" ) {
+                TicketBean vTicketAux = new TicketBean();
+                vTicketAux.setId(tickets.getId());
+                vTicketAux.setDescripcion(tickets.getDescripcion());
+
+                if (tickets.getDispositivo() != null) {
+                    Optional<Equipo> vEquipo = equipoService.findById(tickets.getDispositivo());
+                    vTicketAux.setDispositivo(vEquipo.get().getTipoEquipo() + " (" + vEquipo.get().getSerieActivoFijo() + ")");
+                }
+
+
+                if (tickets.getAsignadoa() != null || tickets.getAsignadoa().equals("0")) {
+                    Optional<Usuario> vUsuario = usuarioService.findById(tickets.getAsignadoa());
+                    if (!vUsuario.isEmpty()) {
+                        vTicketAux.setAsignadoa(vUsuario.get().getNombres() + " " + vUsuario.get().getPaterno());
+                    } else {
+                        vTicketAux.setAsignadoa("");
+                    }
+
+                } else {
+                    vTicketAux.setAsignadoa("");
+                }
+                Optional<Usuario> vUsuario = usuarioService.findById(tickets.getCreadoPor());
+                if (!vUsuario.isEmpty()) {
+                    vTicketAux.setCreadoPor(vUsuario.get().getNombres() + " " + vUsuario.get().getPaterno());
+                } else {
+                    vTicketAux.setCreadoPor("");
+                }
+
+
+                vTicketAux.setPrioridad(tickets.getPrioridad());
+                vTicketAux.setFechaRegistro(tickets.getFechaRegistro());
+                vTicketAux.setFechaInicio(tickets.getFechaInicio());
+                vTicketAux.setFechaFin(tickets.getFechaFin());
+                if (tickets.getEstado().equals("NA")) {
+                    tickets.setEstado("NO ASIGNADO");
+                } else if (tickets.getEstado().equals("AC")) {
+                    tickets.setEstado("ASIGNADO");
+                } else if (tickets.getEstado().equals("TE")) {
+                    tickets.setEstado("TERMINADO");
+                }
+                vTicketAux.setEstado(tickets.getEstado());
+
+                vResponse.add(vTicketAux);
+            }
+        }
+        return vResponse;
+    }
 
     @GetMapping("Grafico")
     public List<GraficoCBean> datosGrafico(){
