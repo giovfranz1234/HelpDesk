@@ -113,7 +113,7 @@ public class TicketController {
         List<Ticket> vTickeReg =  ticketService.findAll();
         int i=0;
         for (Ticket tickets:vTickeReg){
-          if (tickets.getEstado() =="NA" || tickets.getEstado() =="AC" ) {
+          if (tickets.getEstado().equals("NA") || tickets.getEstado().equals("AC") ) {
               TicketBean vTicketAux = new TicketBean();
               vTicketAux.setId(tickets.getId());
               vTicketAux.setDescripcion(tickets.getDescripcion());
@@ -168,7 +168,7 @@ public class TicketController {
         List<Ticket> vTickeReg =  ticketService.findAll();
         int i=0;
         for (Ticket tickets:vTickeReg){
-            if ( tickets.getEstado() =="AC" ) {
+            if ( tickets.getEstado().equals("AC") ) {
                 TicketBean vTicketAux = new TicketBean();
                 vTicketAux.setId(tickets.getId());
                 vTicketAux.setDescripcion(tickets.getDescripcion());
