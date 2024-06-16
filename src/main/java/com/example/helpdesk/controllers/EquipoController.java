@@ -1,12 +1,16 @@
 package com.example.helpdesk.controllers;
 
 import com.example.helpdesk.models.Equipo;
+import com.example.helpdesk.models.Log;
+import com.example.helpdesk.models.Usuario;
 import com.example.helpdesk.services.EquipoService;
+import com.example.helpdesk.services.LogTransService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.Optional;
 
 
@@ -16,7 +20,8 @@ import java.util.Optional;
     public class EquipoController {
         @Autowired
         private EquipoService equipoService;
-
+        @Autowired
+        private LogTransService logTransService;
         @GetMapping
         public ResponseEntity<?> listar(){
             return ResponseEntity.ok().body(equipoService.findAll());
@@ -53,7 +58,16 @@ import java.util.Optional;
         }
         @DeleteMapping("/{id}")
         public ResponseEntity<?> eliminar(@PathVariable Long id){
+            Log log = new Log();
+            Optional<Equipo> equipo = equipoService.findById(id);
+            log.setIdUsuario(1L);
+            log.setTransaccion("Eliminar Equipo");
+            log.setCampo(equipo.get().getSerieActivoFijo()+" "+equipo.get().getTipoEquipo());
+            log.setValorNuevo("Eliminado");
+            log.setFecha(new Date());
+            logTransService.save(log);
             equipoService.deleteById(id);
+
             return ResponseEntity.noContent().build();
 
         }

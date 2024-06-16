@@ -1,7 +1,9 @@
 package com.example.helpdesk.controllers;
 
 
+import com.example.helpdesk.models.Log;
 import com.example.helpdesk.models.Usuario;
+import com.example.helpdesk.services.LogTransService;
 import com.example.helpdesk.services.UsuarioService;
 import com.example.helpdesk.services.impl.ExportPDFService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +23,8 @@ import java.util.Optional;
 public class UsuarioController {
      @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private LogTransService logTransService;
     @Autowired
      private ExportPDFService exportPDFService;
      @GetMapping
@@ -59,7 +64,17 @@ public class UsuarioController {
      }
      @DeleteMapping("/{id}")
      public ResponseEntity<?> eliminar(@PathVariable Long id){
-         usuarioService.deleteById(id);
+         Log log = new Log();
+
+         Optional<Usuario> usuario = usuarioService.findById(id);
+         log.setIdUsuario(1L);
+         log.setTransaccion("Eliminar Usuario");
+         log.setCampo(usuario.get().getNombres()+" "+usuario.get().getPaterno()+" "+usuario.get().getMaterno());
+         log.setValorNuevo("Eliminado");
+         log.setFecha(new Date());
+         logTransService.save(log);
+           usuarioService.deleteById(id);
+
 
          return ResponseEntity.noContent().build();
 
